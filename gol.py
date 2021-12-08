@@ -10,13 +10,20 @@ from time import sleep
 
 N = 800
 # inclusive
-MIN_NEIGHBORS_TO_SURVIVE = 2
-MAX_NEIGHBORS_TO_SURVIVE = 3
-MIN_NEIGHBORS_TO_BE_BORN = 3
-MAX_NEIGHBORS_TO_BE_BORN = 3
-RADIUS_FOR_NEIGHBORS = 1
+# MIN_NEIGHBORS_TO_SURVIVE = 2
+# MAX_NEIGHBORS_TO_SURVIVE = 3
+# MIN_NEIGHBORS_TO_BE_BORN = 3
+# MAX_NEIGHBORS_TO_BE_BORN = 3
+# RADIUS_FOR_NEIGHBORS = 1
 
-INIT_ALIVE_PROBABILITY = 0.2
+INIT_ALIVE_PROBABILITY = 0.15
+MIN_NEIGHBORS_TO_SURVIVE = 11
+MAX_NEIGHBORS_TO_SURVIVE = 17
+MIN_NEIGHBORS_TO_BE_BORN = 11
+MAX_NEIGHBORS_TO_BE_BORN = 13
+RADIUS_FOR_NEIGHBORS = 3
+
+INIT_ALIVE_PROBABILITY = 0.15
 
 ITERS = 100000
 
@@ -25,12 +32,6 @@ assert INIT_ALIVE_PROBABILITY > 0 and INIT_ALIVE_PROBABILITY <= 1
 x = np.random.choice(
     2, size=(N, N), p=[1 - INIT_ALIVE_PROBABILITY, INIT_ALIVE_PROBABILITY]
 ).astype(np.int8)
-# x = np.zeros((N, N)).astype(np.int8)
-# x[1, 1] = 1
-# x[2, 2] = 1
-# x[3, 0] = 1
-# x[3, 1] = 1
-# x[3, 2] = 1
 
 cv2.namedWindow("game of life")
 img = None
@@ -55,7 +56,7 @@ for i in range(ITERS):
         cv2.LINE_AA,
     )
     cv2.imshow("game of life", img)
-    if cv2.waitKey(50) & 0xFF == ord("q"):
+    if cv2.waitKey(20) & 0xFF == ord("q"):
         break
 
     prev_x = x
