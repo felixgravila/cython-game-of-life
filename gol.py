@@ -15,9 +15,16 @@ MAX_NEIGHBORS_TO_SURVIVE = 3
 MIN_NEIGHBORS_TO_BE_BORN = 3
 MAX_NEIGHBORS_TO_BE_BORN = 3
 RADIUS_FOR_NEIGHBORS = 1
-iters = 100000
 
-x = np.random.randint(0, 2, size=(N, N)).astype(np.int8)
+INIT_ALIVE_PROBABILITY = 0.2
+
+ITERS = 100000
+
+assert INIT_ALIVE_PROBABILITY > 0 and INIT_ALIVE_PROBABILITY <= 1
+
+x = np.random.choice(
+    2, size=(N, N), p=[1 - INIT_ALIVE_PROBABILITY, INIT_ALIVE_PROBABILITY]
+).astype(np.int8)
 # x = np.zeros((N, N)).astype(np.int8)
 # x[1, 1] = 1
 # x[2, 2] = 1
@@ -27,12 +34,12 @@ x = np.random.randint(0, 2, size=(N, N)).astype(np.int8)
 
 cv2.namedWindow("game of life")
 img = None
-for i in range(iters):
+for i in range(ITERS):
     print()
     img = np.array(x).astype(np.float32)
     img = (img - 1) * -1
     img = cv2.resize(img, (1600, 1600), interpolation=cv2.INTER_NEAREST)
-    text = f"{i+1:03d}/{iters}"
+    text = f"{i+1:03d}/{ITERS}"
     img = cv2.putText(
         img,
         text,
