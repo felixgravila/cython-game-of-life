@@ -34,19 +34,23 @@ x = np.random.choice(
 
 cv2.namedWindow("game of life")
 img = None
+last = {"survived": 0, "died": 0, "born": 0}
 for i in range(ITERS):
     print()
     img = np.array(x).astype(np.float32)
-    img = (img - 1) * -1
-    img = cv2.resize(img, (1600, 1600), interpolation=cv2.INTER_NEAREST)
-    text = f"{i+1:03d}/{ITERS}"
+    img = (img - 1) * -1  # invert
+    img = np.stack([img, img, img], axis=-1)  # convert to rgb
+    img = cv2.resize(
+        img, (1600, 1600), interpolation=cv2.INTER_NEAREST
+    )  # resize to make sure we can see it
+    text = f"{i+1:03d}/{ITERS}, {last['survived']}s {last['died']}d {last['born']}b"
     img = cv2.putText(
         img,
         text,
-        (10, 10),
+        (10, 30),
         cv2.FONT_HERSHEY_SIMPLEX,
-        0.3,
-        (0.5, 0, 0),
+        1,
+        (0, 0, 190),
         1,
         cv2.LINE_AA,
     )
@@ -55,7 +59,7 @@ for i in range(ITERS):
         break
 
     prev_x = x
-    x = gol_worker.iterate(
+    last = gol_worker.iterate(
         x,
         min_survive=MIN_NEIGHBORS_TO_SURVIVE,
         max_survive=MAX_NEIGHBORS_TO_SURVIVE,
@@ -63,6 +67,8 @@ for i in range(ITERS):
         max_born=MAX_NEIGHBORS_TO_BE_BORN,
         size_n=RADIUS_FOR_NEIGHBORS,
     )
+    x = last["result"]
+
     if (np.array(x) == np.array(prev_x)).all():
         break
 
